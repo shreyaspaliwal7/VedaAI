@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap');
+
+:root {
+  --brand-orange: #E8521A;
+  --brand-orange-light: #FF6B35;
+  --brand-dark: #1A1A1A;
+  --sidebar-width: 200px;
+  --header-height: 56px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: #F5F5F5;
+  color: #1A1A1A;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 4px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.25s ease forwards;
+}
+
+/* Assignment card hover */
+.assignment-card {
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.assignment-card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transform: translateY(-1px);
+}
+
+/* Sidebar nav item */
+.nav-item {
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.nav-item:hover {
+  background: rgba(232, 82, 26, 0.06);
+}
+.nav-item.active {
+  color: var(--brand-orange);
+  font-weight: 500;
+}
+
+/* Question paper styles */
+.paper-body {
+  font-family: 'Times New Roman', Times, serif;
+}
+
+/* Print: exam paper only */
+@media print {
+  @page {
+    size: A4;
+    margin: 18mm 16mm;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  aside,
+  header,
+  nav,
+  .print\\:hidden,
+  [class*="print:hidden"] {
+    display: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  #exam-paper-print {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  .paper-body {
+    font-size: 11pt;
+    line-height: 1.45;
+  }
+
+  .paper-body h1 {
+    font-size: 14pt;
+  }
+
+  .paper-body h2,
+  .paper-body h3 {
+    font-size: 12pt;
+  }
+}
+
+/* Custom checkbox */
+.custom-stepper button {
+  transition: background 0.15s, color 0.15s;
+}
+
+/* Dropdown */
+.dropdown-shadow {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
