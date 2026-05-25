@@ -49,6 +49,18 @@ io.on("connection", (socket) => {
 
 async function bootstrap(): Promise<void> {
   await connectDatabase();
+
+  // In production (or if START_WORKER is set), start the BullMQ worker in the same process
+  // to support seamless, free single-instance hosting on platforms like Render.
+  if (process.env.NODE_ENV === "production" || process.env.START_WORKER === "true") {
+    console.log("[Bootstrap] Starting in-process BullMQ Assessment Worker...");
+    try {
+      require("./workers/assessmentWorker");
+    } catch (err) {
+      console.error("[Bootstrap] Failed to initialize in-process worker:", err);
+    }
+  }
+
   httpServer.listen(env.port, () => {
     console.log(`API server listening on http://localhost:${env.port}`);
   });
