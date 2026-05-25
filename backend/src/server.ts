@@ -9,10 +9,44 @@ import assignmentsRouter from "./routes/assignments";
 const app = express();
 const httpServer = createServer(app);
 
+const clientOrigin = process.env.CLIENT_ORIGIN ?? env.clientOrigin;
+const allowedOrigins = clientOrigin.split(",").map(o => o.trim());
+
+function isOriginAllowed(origin: string | undefined): boolean {
+  if (!origin) return true;
+  const originLower = origin.toLowerCase();
+  
+  // Check against defined allowed origins
+  const matched = allowedOrigins.some(allowed => {
+    if (allowed === "*") return true;
+    return allowed.toLowerCase() === originLower;
+  });
+  if (matched) return true;
+  
+  // Dynamically allow localhost/127.0.0.1
+  if (originLower.includes("localhost") || originLower.includes("127.0.0.1")) {
+    return true;
+  }
+  
+  // Dynamically allow all Vercel domains for the project
+  if (originLower.endsWith(".vercel.app")) {
+    return true;
+  }
+  
+  return false;
+}
+
 const io = new SocketServer(httpServer, {
   cors: {
-    origin: env.clientOrigin,
+    origin: (origin, callback) => {
+      if (isOriginAllowed(origin)) {
+        callback(null, true);
+      } else {
+        callback(null, false);
+      }
+    },
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
@@ -21,7 +55,13 @@ app.set("io", io);
 
 app.use(
   cors({
-    origin: env.clientOrigin,
+    origin: (origin, callback) => {
+      if (isOriginAllowed(origin)) {
+        callback(null, true);
+      } else {
+        callback(null, false);
+      }
+    },
     credentials: true,
   })
 );
